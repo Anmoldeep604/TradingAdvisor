@@ -8,13 +8,12 @@ import faiss
 
 client = InferenceClient("HuggingFaceH4/zephyr-7b-beta")
 
-# Placeholder for the app's state
 class MyApp:
     def __init__(self) -> None:
         self.documents = []
         self.embeddings = None
         self.index = None
-        self.load_pdf("THEDIA1.pdf")
+        self.load_pdf("YOURPDFFILE.pdf")
         self.build_vector_db()
 
     def load_pdf(self, file_path: str) -> None:
@@ -53,7 +52,7 @@ def respond(
     temperature: float,
     top_p: float,
 ):
-    system_message = "You are a knowledgeable DBT coach. You always talk about one options at at a time. you add greetings and you ask questions like real counsellor. Remember you are helpful and a good listener. You are concise and never ask multiple questions, or give long response. You response like a human counsellor accurately and correctly. consider the users as your client. and practice verbal cues only where needed. Remember you must be respectful and consider that the user may not be in a situation to deal with a wordy chatbot.  You Use DBT book to guide users through DBT exercises and provide helpful information. When needed only then you ask one follow up question at a time to guide the user to ask appropiate question. You avoid giving suggestion if any dangerous act is mentioned by the user and refer to call someone or emergency."
+    system_message = "Feeling overwhelmed by market fluctuations? Take a moment to breathe deeply and refocus. Remember, successful trading combines strategy with emotional balance. Whether it's analyzing trends or managing risks, I'm here to help. Share your thoughts or ask for trading insights anytime."
     messages = [{"role": "system", "content": system_message}]
 
     for val in history:
@@ -72,7 +71,7 @@ def respond(
     response = ""
     for message in client.chat_completion(
         messages,
-        max_tokens=100,
+        max_tokens=1000,
         stream=True,
         temperature=0.98,
         top_p=0.7,
@@ -84,23 +83,21 @@ def respond(
 demo = gr.Blocks()
 
 with demo:
+    gr.Markdown("📈 **Trading Advisor**")
     gr.Markdown(
-        "‼️Disclaimer: This chatbot is based on a DBT exercise book that is publicly available. and just to test RAG implementation.‼️"
+        "📝 This chatbot is designed to assist with trading advice and emotional balance during trading activities. "
+        "Please note that we are not financial advisors, and the use of this chatbot is at your own responsibility."
     )
-    
     chatbot = gr.ChatInterface(
         respond,
         examples=[
-            ["I feel overwhelmed with work."],
-            ["Can you guide me through a quick meditation?"],
-            ["How do I stop worrying about things I can't control?"],
-            ["What are some DBT skills for managing anxiety?"],
-            ["Can you explain mindfulness in DBT?"],
-            ["I am interested in DBT excercises"],
-            ["I feel restless. Please help me."],
-            ["I have destructive thoughts coming to my mind repetatively."]
+            ["I'm anxious about the volatility in the market."],
+            ["Can you recommend a strategy to manage stress during trading?"],
+            ["How do I stay focused on my trading plan amidst market uncertainty?"],
+            ["What is a good trading strategy for beginners?"],
+            ["Can you help me understand technical analysis?"]
         ],
-        title='Dialectical Behaviour Therapy Assistant👩‍⚕️🧘‍♀️'
+        title='Trading Advisor📈'
     )
 
 if __name__ == "__main__":
